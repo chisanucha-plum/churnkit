@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - DATABASE_URL=postgresql://churn_user:churn_password@db:5432/churn_db
+      - REDIS_URL=redis://redis:6379/0
+      - API_KEY=dev-api-key
+      - LOG_LEVEL=INFO
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - churn-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=churn_user
+      - POSTGRES_PASSWORD=churn_password
+      - POSTGRES_DB=churn_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - churn-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - churn-network
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+    volumes:
+      - ./dashboard:/app/dashboard
+    networks:
+      - churn-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  churn-network:
+    driver: bridge
