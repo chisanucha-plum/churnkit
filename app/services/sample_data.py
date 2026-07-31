@@ -1,13 +1,18 @@
 """
-Generate sample customer data for testing and demonstration.
+Sample customer data generator for testing and demonstration.
 
-This module creates realistic sample data that mimics real customer churn data.
+This module creates realistic synthetic customer data that mimics
+real customer churn patterns for development and testing purposes.
 """
 
+import logging
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from typing import Tuple
+from typing import Optional
+
+
+logger = logging.getLogger(__name__)
 
 
 def generate_sample_data(n_samples: int = 1000) -> pd.DataFrame:
@@ -74,20 +79,24 @@ def generate_sample_data(n_samples: int = 1000) -> pd.DataFrame:
 
 def save_sample_data(df: pd.DataFrame, filepath: str = './data/sample_customers.csv') -> None:
     """
-    Save sample data to CSV.
+    Save sample data to CSV file.
     
     Args:
         df: DataFrame to save
         filepath: Path to save file
     """
-    Path(filepath).parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(filepath, index=False)
-    print(f"✓ Sample data saved to {filepath}")
+    try:
+        Path(filepath).parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(filepath, index=False)
+        logger.info(f"Sample data saved successfully to {filepath}")
+    except Exception as e:
+        logger.error(f"Failed to save sample data: {str(e)}")
+        raise
 
 
 def load_sample_data(filepath: str = './data/sample_customers.csv') -> pd.DataFrame:
     """
-    Load sample data from CSV.
+    Load sample data from CSV file.
     
     Args:
         filepath: Path to data file
@@ -95,21 +104,32 @@ def load_sample_data(filepath: str = './data/sample_customers.csv') -> pd.DataFr
     Returns:
         DataFrame with customer data
     """
-    if not Path(filepath).exists():
-        print(f"⚠️  File not found: {filepath}. Generating new sample data...")
-        df = generate_sample_data()
-        save_sample_data(df, filepath)
+    try:
+        if not Path(filepath).exists():
+            logger.warning(f"File not found: {filepath}. Generating new sample data...")
+            df = generate_sample_data()
+            save_sample_data(df, filepath)
+            return df
+        
+        df = pd.read_csv(filepath)
+        logger.info(f"Sample data loaded successfully from {filepath}")
         return df
-    
-    return pd.read_csv(filepath)
+    except Exception as e:
+        logger.error(f"Failed to load sample data: {str(e)}")
+        raise
 
 
 if __name__ == "__main__":
+    # Configure logging for standalone execution
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
+    
     # Generate and save sample data
     df = generate_sample_data(n_samples=1000)
     save_sample_data(df)
     
-    print(f"\n✓ Generated {len(df)} sample records")
-    print(f"✓ Churn rate: {df['churn'].mean():.1%}")
-    print(f"\nFirst 5 records:")
-    print(df.head())
+    logger.info(f"Generated {len(df)} sample records")
+    logger.info(f"Churn rate: {df['churn'].mean():.1%}")
+    logger.info(f"\nFirst 5 records:\n{df.head()}")

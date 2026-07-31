@@ -34,9 +34,6 @@ class PredictionEngine:
         # Make prediction
         prediction, probability = self.model.predict(df)
 
-        # Determine risk level
-        risk_level = self._determine_risk_level(probability[0])
-
         # Get explanation if available
         explanation = None
         if self.explainer:
@@ -65,15 +62,6 @@ class PredictionEngine:
             results.append(result)
 
         return results
-
-    def _determine_risk_level(self, probability: float) -> str:
-        """Determine risk level from probability."""
-        if probability >= 0.7:
-            return "high"
-        elif probability >= 0.4:
-            return "medium"
-        else:
-            return "low"
 
     def get_high_risk_customers(
         self, predictions: List[PredictionResult], threshold: float = 0.7

@@ -1,5 +1,6 @@
-"""Simple model trainer for MVP."""
+"""Production-ready Random Forest model trainer for customer churn prediction."""
 
+import logging
 import pickle
 import numpy as np
 import pandas as pd
@@ -11,6 +12,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.utils.class_weight import compute_class_weight
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+
+
+logger = logging.getLogger(__name__)
 
 
 class SimpleModelTrainer:
@@ -55,19 +59,19 @@ class SimpleModelTrainer:
     
     def train(self, df: pd.DataFrame) -> Dict[str, float]:
         """Train Random Forest model with balanced class weights."""
-        print("🔄 Preprocessing data...")
+        logger.info("Preprocessing training data...")
         X, y = self.preprocess_data(df)
         
-        print("📊 Splitting data (80/20)...")
+        logger.info("Splitting data into train and test sets (80/20 split)...")
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=42, stratify=y
         )
         
-        print("🤖 Training Random Forest with balanced class weights...")
+        logger.info("Training Random Forest model with balanced class weights...")
         self.model = self._build_model(y_train)
         self.model.fit(X_train, y_train)
         
-        print("📈 Evaluating model...")
+        logger.info("Evaluating model performance...")
         y_pred = self.model.predict(X_test)
         y_pred_proba = self.model.predict_proba(X_test)[:, 1]
         
@@ -102,10 +106,10 @@ class SimpleModelTrainer:
         }
     
     def _print_metrics(self) -> None:
-        """Print model metrics."""
-        print("\n✅ Model trained successfully!")
+        """Log model performance metrics."""
+        logger.info("Model training completed successfully")
         for metric, value in self.metrics.items():
-            print(f"   {metric.capitalize():10s}: {value:.3f}")
+            logger.info(f"  {metric}: {value:.4f}")
     
     def predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Make predictions on preprocessed features."""
@@ -136,34 +140,45 @@ class SimpleModelTrainer:
         return self.scaler.transform(df[self.feature_names])
     
     def save(self, filename: str = 'model.pkl') -> None:
-        """Save model and preprocessing artifacts."""
+        """Save model and preprocessing artifacts to disk."""
         filepath = self.model_path / filename
         
-        with open(filepath, 'wb') as f:
-            pickle.dump({
-                'model': self.model,
-                'scaler': self.scaler,
-                'label_encoders': self.label_encoders,
-                'feature_names': self.feature_names,
-                'metrics': self.metrics,
-            }, f)
-        
-        print(f"✓ Model saved to {filepath}")
+        try:
+            with open(filepath, 'wb') as f:
+                pickle.dump({
+                    'model': self.model,
+                    'scaler': self.scaler,
+                    'label_encoders': self.label_encoders,
+                    'feature_names': self.feature_names,
+                    'metrics': self.metrics,
+                }, f)
+            
+            logger.info(f"Model saved successfully to {filepath}")
+        except Exception as e:
+            logger.error(f"Failed to save model: {str(e)}")
+            raise
     
     def load(self, filename: str = 'model.pkl') -> None:
-        """Load model and preprocessing artifacts."""
+        """Load model and preprocessing artifacts from disk."""
         filepath = self.model_path / filename
         
-        with open(filepath, 'rb') as f:
-            data = pickle.load(f)
-        
-        self.model = data['model']
-        self.scaler = data['scaler']
-        self.label_encoders = data['label_encoders']
-        self.feature_names = data['feature_names']
-        self.metrics = data['metrics']
-        
-        print(f"✓ Model loaded from {filepath}")
+        try:
+            with open(filepath, 'rb') as f:
+                data = pickle.load(f)
+            
+            self.model = data['model']
+            self.scaler = data['scaler']
+            self.label_encoders = data['label_encoders']
+            self.feature_names = data['feature_names']
+            self.metrics = data['metrics']
+            
+            logger.info(f"Model loaded successfully from {filepath}")
+        except FileNotFoundError:
+            logger.warning(f"Model file not found: {filepath}")
+            raise
+        except Exception as e:
+            logger.error(f"Failed to load model: {str(e)}")
+            raise
     
     def get_feature_importance(self) -> Dict[str, float]:
         """Get feature importance sorted by value."""
