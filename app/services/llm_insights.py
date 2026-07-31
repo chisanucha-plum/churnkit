@@ -1,7 +1,7 @@
 """LLM integration for AI insights."""
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from app.config.settings import settings
 

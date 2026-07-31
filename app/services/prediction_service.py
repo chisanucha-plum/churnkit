@@ -7,18 +7,14 @@ Layered Architecture: Service Layer
 """
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 
-from app.models.schemas import (
-    CustomerInput,
-    PredictionResponse,
-    BatchPredictionRequest,
-    BatchPredictionResponse,
-    DetailedPredictionResponse,
-)
+from app.models.schemas import (BatchPredictionRequest,
+                                BatchPredictionResponse, CustomerInput,
+                                DetailedPredictionResponse, PredictionResponse)
 
 logger = logging.getLogger(__name__)
 

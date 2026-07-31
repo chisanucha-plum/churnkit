@@ -1,10 +1,10 @@
 """Prediction engine service."""
 
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from app.models.ml_models import PredictionResult
 

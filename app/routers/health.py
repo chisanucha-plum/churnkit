@@ -9,11 +9,11 @@ import logging
 
 from fastapi import APIRouter, Depends
 
+from app.config.settings import get_settings
+from app.dependencies import get_prediction_service
 from app.models.schemas import HealthResponse
 from app.services.health_service import HealthService
 from app.services.prediction_service import PredictionService
-from app.config.settings import get_settings
-from app.dependencies import get_prediction_service
 
 logger = logging.getLogger(__name__)
 

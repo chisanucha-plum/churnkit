@@ -8,9 +8,9 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.models.schemas import ModelMetrics, FeatureImportanceResponse
-from app.services.prediction_service import PredictionService
 from app.dependencies import get_prediction_service
+from app.models.schemas import FeatureImportanceResponse, ModelMetrics
+from app.services.prediction_service import PredictionService
 
 logger = logging.getLogger(__name__)
 

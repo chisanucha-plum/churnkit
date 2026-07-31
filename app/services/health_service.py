@@ -8,8 +8,8 @@ Layered Architecture: Service Layer
 
 import logging
 
-from app.models.schemas import HealthResponse
 from app.database.connection import get_db_manager
+from app.models.schemas import HealthResponse
 
 logger = logging.getLogger(__name__)
 
