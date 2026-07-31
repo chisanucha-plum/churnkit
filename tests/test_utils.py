@@ -1,9 +1,10 @@
 """Test utilities and helpers for Customer Churn Prediction System tests."""
 
-import pandas as pd
-import numpy as np
-from typing import Dict, Any, List, Tuple
 import json
+from typing import Any, Dict, List, Tuple
+
+import numpy as np
+import pandas as pd
 
 
 class TestDataGenerator:

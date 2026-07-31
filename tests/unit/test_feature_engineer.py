@@ -1,7 +1,7 @@
 """Unit tests for feature engineer."""
 
-import pytest
 import pandas as pd
+import pytest
 
 from app.services.feature_engineer import FeatureEngineer
 

@@ -8,9 +8,10 @@ Requirements: 1.2, 33.1, 33.6
 """
 
 import os
-import pytest
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
+import pytest
 
 from app.config.settings import Settings, get_settings
 

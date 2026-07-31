@@ -7,22 +7,18 @@ retry logic, and health checks.
 Requirements: 1.2, 33.6
 """
 
-import pytest
 import logging
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import MagicMock, call, patch
+
+import pytest
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
-from app.database.connection import (
-    DatabaseConnectionManager,
-    get_db_manager,
-    get_db_engine,
-    get_db_session,
-    close_db,
-    _db_manager,
-)
 from app.config.settings import Settings
+from app.database.connection import (DatabaseConnectionManager, _db_manager,
+                                     close_db, get_db_engine, get_db_manager,
+                                     get_db_session)
 
 
 class TestDatabaseConnectionManagerInitialization:
