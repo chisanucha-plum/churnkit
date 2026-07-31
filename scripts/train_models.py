@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.services.data_loader import DataLoader
 from app.services.feature_engineer import FeatureEngineer
-from app.services.model_trainer import ModelTrainer
+# ModelTrainer import removed because training steps are currently commented out
 from app.services.preprocessor import DataPreprocessor
 
 logging.basicConfig(level=logging.INFO)
@@ -19,18 +19,18 @@ def main():
 
     # Load data
     loader = DataLoader()
-    # df = loader.load_csv("data/raw/churn_data.csv")
+    df = loader.load_csv("data/raw/churn_data.csv")
 
     # Preprocess
     preprocessor = DataPreprocessor()
-    # df = preprocessor.preprocess(df, numeric_cols=[], categorical_cols=[])
+    df = preprocessor.preprocess(df, numeric_cols=[], categorical_cols=[])
 
     # Feature engineering
     engineer = FeatureEngineer()
-    # df = engineer.create_interaction_features(df, [])
+    df = engineer.create_interaction_features(df, [])
 
-    # Train model
-    trainer = ModelTrainer(model_type="random_forest")
+    # Train model (training steps commented out until data split is available)
+    # trainer = ModelTrainer(model_type="random_forest")
     # trainer.train(X_train, y_train)
     # metrics = trainer.evaluate(X_test, y_test)
 
