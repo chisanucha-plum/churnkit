@@ -31,8 +31,8 @@ from app.utils.helpers import (
 )
 from app.utils.config_loader import ConfigLoader, EnvironmentConfig
 
-
 # ===== EXCEPTION TESTS =====
+
 
 class TestExceptions:
     """Test custom exceptions."""
@@ -54,6 +54,7 @@ class TestExceptions:
 
 
 # ===== PII MASKING TESTS =====
+
 
 class TestPIIMasker:
     """Test PII masking functionality."""
@@ -101,6 +102,7 @@ class TestPIIMasker:
 
 # ===== LOGGER TESTS =====
 
+
 class TestStructuredLogger:
     """Test structured logger."""
 
@@ -126,6 +128,7 @@ class TestStructuredLogger:
 
 
 # ===== VALIDATOR TESTS =====
+
 
 class TestInputValidator:
     """Test input validation."""
@@ -216,10 +219,12 @@ class TestInputValidator:
 
     def test_validate_dataframe(self):
         """Test DataFrame validation."""
-        df = pd.DataFrame({
-            "col1": [1, 2, 3],
-            "col2": [4, 5, 6],
-        })
+        df = pd.DataFrame(
+            {
+                "col1": [1, 2, 3],
+                "col2": [4, 5, 6],
+            }
+        )
         is_valid, error = InputValidator.validate_dataframe(df)
         assert is_valid is True
         assert error is None
@@ -235,10 +240,12 @@ class TestInputValidator:
 
     def test_validate_numeric_features(self):
         """Test numeric features validation."""
-        X = pd.DataFrame({
-            "f1": np.random.rand(100),
-            "f2": np.random.rand(100),
-        })
+        X = pd.DataFrame(
+            {
+                "f1": np.random.rand(100),
+                "f2": np.random.rand(100),
+            }
+        )
         y = pd.Series(np.random.randint(0, 2, 100))
         is_valid, error = InputValidator.validate_numeric_features(X, y)
         assert is_valid is True
@@ -246,6 +253,7 @@ class TestInputValidator:
 
 
 # ===== HELPER TESTS =====
+
 
 class TestHelpers:
     """Test helper functions."""
@@ -299,6 +307,7 @@ class TestHelpers:
 
 # ===== CONFIG LOADER TESTS =====
 
+
 class TestConfigLoader:
     """Test configuration loader."""
 
@@ -331,6 +340,7 @@ class TestConfigLoader:
 
 
 # ===== ENVIRONMENT CONFIG TESTS =====
+
 
 class TestEnvironmentConfig:
     """Test environment configuration."""
