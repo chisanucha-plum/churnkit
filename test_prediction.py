@@ -4,10 +4,10 @@ Test script to demonstrate HIGH RISK predictions.
 This script shows examples of customers with high churn probability.
 """
 
-import requests
 import json
-from typing import Dict, Any
+from typing import Any, Dict
 
+import requests
 
 # API endpoint
 API_URL = "http://localhost:8000"

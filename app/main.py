@@ -5,11 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config.settings import get_settings
-from app.database.connection import get_db_manager, close_db
-from app.services.sample_data import generate_sample_data, save_sample_data
-from app.services.churn_model import ChurnModelTrainer
+from app.database.connection import close_db, get_db_manager
 from app.dependencies import set_model_trainer
-from app.routers import prediction, health, metrics
+from app.routers import health, metrics, prediction
+from app.services.churn_model import ChurnModelTrainer
+from app.services.sample_data import generate_sample_data, save_sample_data
 
 logging.basicConfig(
     level=logging.INFO,

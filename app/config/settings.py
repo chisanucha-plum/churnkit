@@ -13,12 +13,12 @@ Usage:
 """
 
 import os
-from typing import Optional
-from pathlib import Path
 from functools import lru_cache
+from pathlib import Path
+from typing import Optional
 
-from pydantic_settings import BaseSettings
 from pydantic import Field, validator
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):

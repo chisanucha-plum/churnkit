@@ -14,12 +14,12 @@ Usage:
 
 import logging
 import time
-from typing import Optional
 from contextlib import contextmanager
+from typing import Optional
 
-from sqlalchemy import create_engine, text, event
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.exc import SQLAlchemyError, OperationalError
+from sqlalchemy import create_engine, event, text
+from sqlalchemy.exc import OperationalError, SQLAlchemyError
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import QueuePool, StaticPool
 
 from app.config.settings import get_settings

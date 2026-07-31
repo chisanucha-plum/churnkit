@@ -5,8 +5,8 @@ Layered Architecture: Model Layer (DTOs)
 - Validation handled at the boundary
 """
 
-from typing import List, Optional
 import uuid
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
