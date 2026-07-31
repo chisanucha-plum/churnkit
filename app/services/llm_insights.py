@@ -57,9 +57,7 @@ class LLMInsightsService:
             logger.error(f"Error generating LLM insights: {str(e)}")
             return None
 
-    def _build_prompt(
-        self, customer_data: Dict[str, Any], prediction: float
-    ) -> str:
+    def _build_prompt(self, customer_data: Dict[str, Any], prediction: float) -> str:
         """Build prompt for LLM."""
         return f"""
         Analyze this customer data and provide brief retention recommendations:
@@ -75,9 +73,7 @@ class LLMInsightsService:
         Provide 2-3 specific retention strategies in 2-3 sentences.
         """
 
-    def generate_batch_insights(
-        self, predictions: list
-    ) -> Dict[str, Optional[str]]:
+    def generate_batch_insights(self, predictions: list) -> Dict[str, Optional[str]]:
         """Generate insights for batch predictions."""
         insights = {}
 

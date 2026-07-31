@@ -52,13 +52,15 @@ class PredictionService:
         # Determine risk level and recommendation
         risk_level = self._get_risk_level(churn_probability)
         risk_score = int(churn_probability * 100)
-        recommendation = self._get_recommendation(churn_probability, customer.contract_type)
+        recommendation = self._get_recommendation(
+            churn_probability, customer.contract_type
+        )
 
         return PredictionResponse(
             churn_probability=round(churn_probability, 3),
             risk_level=risk_level,
             risk_score=risk_score,
-            recommendation=recommendation
+            recommendation=recommendation,
         )
 
     def _preprocess_customer_data(self, customer: CustomerInput) -> np.ndarray:
@@ -163,9 +165,12 @@ class PredictionService:
         Returns:
             BatchPredictionResponse with predictions for each customer
         """
-        logger.info(f"Processing batch predictions for {len(request.customers)} customers")
+        logger.info(
+            f"Processing batch predictions for {len(request.customers)} customers"
+        )
 
         import time
+
         start_time = time.time()
 
         predictions = []
@@ -180,7 +185,7 @@ class PredictionService:
                 churn_prediction=result.churn_probability >= 0.5,
                 risk_level=result.risk_level.lower(),
                 confidence=max(result.churn_probability, 1 - result.churn_probability),
-                explanation=None
+                explanation=None,
             )
             predictions.append(detailed)
 
@@ -193,7 +198,7 @@ class PredictionService:
             predictions=predictions,
             total_count=len(predictions),
             high_risk_count=high_risk_count,
-            processing_time_ms=round(processing_time, 2)
+            processing_time_ms=round(processing_time, 2),
         )
 
     def is_model_loaded(self) -> bool:

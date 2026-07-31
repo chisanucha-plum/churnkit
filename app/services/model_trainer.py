@@ -55,9 +55,7 @@ class ModelTrainer:
         self.model.fit(X_train, y_train)
         logger.info("Model training completed")
 
-    def evaluate(
-        self, X_test: pd.DataFrame, y_test: pd.Series
-    ) -> Dict[str, float]:
+    def evaluate(self, X_test: pd.DataFrame, y_test: pd.Series) -> Dict[str, float]:
         """Evaluate model performance."""
         logger.info("Evaluating model")
 
@@ -90,4 +88,6 @@ class ModelTrainer:
 
         importances = self.model.feature_importances_
         feature_importance = dict(zip(feature_names, importances))
-        return dict(sorted(feature_importance.items(), key=lambda x: x[1], reverse=True))
+        return dict(
+            sorted(feature_importance.items(), key=lambda x: x[1], reverse=True)
+        )

@@ -42,7 +42,7 @@ class HealthService:
             status=overall_status,
             model_loaded=model_loaded,
             database_healthy=db_healthy,
-            version=app_version
+            version=app_version,
         )
 
     def _check_database(self) -> bool:
