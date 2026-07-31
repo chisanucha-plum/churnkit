@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from app.models.database_models import Customer, Prediction, ModelVersion
+from app.models.database_models import Customer, ModelVersion, Prediction
 
 logger = logging.getLogger(__name__)
 
@@ -28,9 +28,9 @@ class CustomerRepository:
 
     def get_by_id(self, customer_id: str) -> Optional[Customer]:
         """Get customer by ID."""
-        return self.db.query(Customer).filter(
-            Customer.customer_id == customer_id
-        ).first()
+        return (
+            self.db.query(Customer).filter(Customer.customer_id == customer_id).first()
+        )
 
     def get_all(self, skip: int = 0, limit: int = 100) -> List[Customer]:
         """Get all customers."""
@@ -76,15 +76,19 @@ class PredictionRepository:
 
     def get_by_customer_id(self, customer_id: str) -> List[Prediction]:
         """Get predictions for customer."""
-        return self.db.query(Prediction).filter(
-            Prediction.customer_id == customer_id
-        ).all()
+        return (
+            self.db.query(Prediction)
+            .filter(Prediction.customer_id == customer_id)
+            .all()
+        )
 
     def get_high_risk(self, threshold: float = 0.7) -> List[Prediction]:
         """Get high-risk predictions."""
-        return self.db.query(Prediction).filter(
-            Prediction.churn_probability >= threshold
-        ).all()
+        return (
+            self.db.query(Prediction)
+            .filter(Prediction.churn_probability >= threshold)
+            .all()
+        )
 
 
 class ModelVersionRepository:
@@ -105,9 +109,9 @@ class ModelVersionRepository:
 
     def get_active(self) -> Optional[ModelVersion]:
         """Get active model version."""
-        return self.db.query(ModelVersion).filter(
-            ModelVersion.is_active == True
-        ).first()
+        return (
+            self.db.query(ModelVersion).filter(ModelVersion.is_active == True).first()
+        )
 
     def get_all(self) -> List[ModelVersion]:
         """Get all model versions."""
