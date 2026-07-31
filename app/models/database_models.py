@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, Integer, String, Boolean, Index
+from sqlalchemy import Boolean, Column, DateTime, Float, Index, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()

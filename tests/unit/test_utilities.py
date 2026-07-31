@@ -8,31 +8,32 @@ Tests for:
 - Configuration loading
 """
 
-import pytest
-import pandas as pd
-import numpy as np
-from typing import Dict, Any
+from typing import Any, Dict
 
+import numpy as np
+import pandas as pd
+import pytest
+
+from app.utils.config_loader import ConfigLoader, EnvironmentConfig
 from app.utils.exceptions import (
-    InvalidInputException,
-    DataValidationException,
     ConfigurationException,
+    DataValidationException,
+    InvalidInputException,
+)
+from app.utils.helpers import (
+    chunk_list,
+    convert_to_bool,
+    convert_to_numeric,
+    format_currency,
+    format_percentage,
+    normalize_value,
+    safe_get,
 )
 from app.utils.logger import PIIMasker, StructuredLogger, get_logger
 from app.utils.validators import InputValidator
-from app.utils.helpers import (
-    safe_get,
-    format_percentage,
-    format_currency,
-    chunk_list,
-    normalize_value,
-    convert_to_numeric,
-    convert_to_bool,
-)
-from app.utils.config_loader import ConfigLoader, EnvironmentConfig
-
 
 # ===== EXCEPTION TESTS =====
+
 
 class TestExceptions:
     """Test custom exceptions."""
@@ -54,6 +55,7 @@ class TestExceptions:
 
 
 # ===== PII MASKING TESTS =====
+
 
 class TestPIIMasker:
     """Test PII masking functionality."""
@@ -101,6 +103,7 @@ class TestPIIMasker:
 
 # ===== LOGGER TESTS =====
 
+
 class TestStructuredLogger:
     """Test structured logger."""
 
@@ -126,6 +129,7 @@ class TestStructuredLogger:
 
 
 # ===== VALIDATOR TESTS =====
+
 
 class TestInputValidator:
     """Test input validation."""
@@ -216,10 +220,12 @@ class TestInputValidator:
 
     def test_validate_dataframe(self):
         """Test DataFrame validation."""
-        df = pd.DataFrame({
-            "col1": [1, 2, 3],
-            "col2": [4, 5, 6],
-        })
+        df = pd.DataFrame(
+            {
+                "col1": [1, 2, 3],
+                "col2": [4, 5, 6],
+            }
+        )
         is_valid, error = InputValidator.validate_dataframe(df)
         assert is_valid is True
         assert error is None
@@ -235,10 +241,12 @@ class TestInputValidator:
 
     def test_validate_numeric_features(self):
         """Test numeric features validation."""
-        X = pd.DataFrame({
-            "f1": np.random.rand(100),
-            "f2": np.random.rand(100),
-        })
+        X = pd.DataFrame(
+            {
+                "f1": np.random.rand(100),
+                "f2": np.random.rand(100),
+            }
+        )
         y = pd.Series(np.random.randint(0, 2, 100))
         is_valid, error = InputValidator.validate_numeric_features(X, y)
         assert is_valid is True
@@ -246,6 +254,7 @@ class TestInputValidator:
 
 
 # ===== HELPER TESTS =====
+
 
 class TestHelpers:
     """Test helper functions."""
@@ -299,6 +308,7 @@ class TestHelpers:
 
 # ===== CONFIG LOADER TESTS =====
 
+
 class TestConfigLoader:
     """Test configuration loader."""
 
@@ -331,6 +341,7 @@ class TestConfigLoader:
 
 
 # ===== ENVIRONMENT CONFIG TESTS =====
+
 
 class TestEnvironmentConfig:
     """Test environment configuration."""

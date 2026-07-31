@@ -9,11 +9,11 @@ import logging
 
 from fastapi import APIRouter, Depends
 
+from app.config.settings import get_settings
+from app.dependencies import get_prediction_service
 from app.models.schemas import HealthResponse
 from app.services.health_service import HealthService
 from app.services.prediction_service import PredictionService
-from app.config.settings import get_settings
-from app.dependencies import get_prediction_service
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ router = APIRouter(tags=["Health"])
 @router.get("/health", response_model=HealthResponse)
 async def health_check(
     prediction_service: PredictionService = Depends(get_prediction_service),
-    health_service: HealthService = Depends()
+    health_service: HealthService = Depends(),
 ):
     """
     Health check endpoint.
@@ -34,7 +34,7 @@ async def health_check(
 
     return health_service.check_health(
         model_loaded=prediction_service.is_model_loaded(),
-        app_version=settings.app_version
+        app_version=settings.app_version,
     )
 
 
@@ -46,5 +46,5 @@ async def root():
     return {
         "message": "Customer Churn Prediction System",
         "version": settings.app_version,
-        "docs": "/docs"
+        "docs": "/docs",
     }

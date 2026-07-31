@@ -5,13 +5,13 @@ Layered Architecture: Model Layer (DTOs)
 - Validation handled at the boundary
 """
 
-from typing import List, Optional
 import uuid
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-
 # ===== Input DTOs =====
+
 
 class CustomerInput(BaseModel):
     """Customer input for prediction (DTO)."""
@@ -28,7 +28,9 @@ class CustomerInput(BaseModel):
     streaming_tv: int = Field(..., ge=0, le=1, description="Has streaming TV")
     streaming_movies: int = Field(..., ge=0, le=1, description="Has streaming movies")
     payment_method: str = Field(..., description="Payment method")
-    paperless_billing: int = Field(..., ge=0, le=1, description="Uses paperless billing")
+    paperless_billing: int = Field(
+        ..., ge=0, le=1, description="Uses paperless billing"
+    )
     senior_citizen: int = Field(..., ge=0, le=1, description="Is senior citizen")
     partner: int = Field(..., ge=0, le=1, description="Has partner")
     dependents: int = Field(..., ge=0, le=1, description="Has dependents")
@@ -98,6 +100,7 @@ class CustomerData(CustomerInput):
 
 # ===== Output DTOs =====
 
+
 class PredictionResponse(BaseModel):
     """Prediction output response (DTO)."""
 
@@ -144,6 +147,7 @@ class DetailedPredictionResponse(BaseModel):
 
 # ===== Batch Operation DTOs =====
 
+
 class BatchPredictionRequest(BaseModel):
     """Batch prediction request."""
 
@@ -161,6 +165,7 @@ class BatchPredictionResponse(BaseModel):
 
 
 # ===== System DTOs =====
+
 
 class ModelMetrics(BaseModel):
     """Model performance metrics."""

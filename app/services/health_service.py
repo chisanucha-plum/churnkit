@@ -8,8 +8,8 @@ Layered Architecture: Service Layer
 
 import logging
 
-from app.models.schemas import HealthResponse
 from app.database.connection import get_db_manager
+from app.models.schemas import HealthResponse
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ class HealthService:
             status=overall_status,
             model_loaded=model_loaded,
             database_healthy=db_healthy,
-            version=app_version
+            version=app_version,
         )
 
     def _check_database(self) -> bool:

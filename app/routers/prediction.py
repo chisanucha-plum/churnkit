@@ -11,14 +11,14 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from app.dependencies import get_prediction_service
 from app.models.schemas import (
-    CustomerInput,
-    PredictionResponse,
     BatchPredictionRequest,
     BatchPredictionResponse,
+    CustomerInput,
+    PredictionResponse,
 )
 from app.services.prediction_service import PredictionService
-from app.dependencies import get_prediction_service
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ router = APIRouter(prefix="/predict", tags=["Prediction"])
 @router.post("", response_model=PredictionResponse)
 async def predict(
     customer: CustomerInput,
-    service: PredictionService = Depends(get_prediction_service)
+    service: PredictionService = Depends(get_prediction_service),
 ):
     """
     Predict churn probability for a single customer.
@@ -48,7 +48,7 @@ async def predict(
 @router.post("/batch", response_model=BatchPredictionResponse)
 async def predict_batch(
     request: BatchPredictionRequest,
-    service: PredictionService = Depends(get_prediction_service)
+    service: PredictionService = Depends(get_prediction_service),
 ):
     """
     Predict churn probability for multiple customers.
