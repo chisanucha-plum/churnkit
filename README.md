@@ -1,214 +1,184 @@
-# Customer Churn Prediction System
+#churnkit
 
-A production-ready ML system for predicting customer churn with FastAPI backend, Streamlit dashboard, and comprehensive monitoring.
-
-## Features
-
-- **ML Predictions**: Random Forest, Gradient Boosting, and Logistic Regression models
-- **REST API**: FastAPI with comprehensive endpoints for predictions and metrics
-- **Dashboard**: Streamlit-based interactive dashboard for visualization
-- **Explainability**: SHAP-based model interpretability
-- **LLM Integration**: AI-powered insights and recommendations
-- **Monitoring**: Prometheus metrics, distributed tracing, and alerts
-- **Database**: SQLAlchemy ORM with PostgreSQL support
-- **Caching**: Redis caching for performance optimization
-- **Testing**: Comprehensive unit and integration tests
-- **Docker**: Production-ready Docker and Docker Compose setup
+ML system for predicting customer churn.
 
 ## Quick Start
 
-### Prerequisites
-- Python 3.9+
-- Docker and Docker Compose (optional)
-
-### Local Development
-
-1. **Clone repository**
 ```bash
-git clone <repository-url>
-cd customer-churn-prediction
-```
-
-2. **Create virtual environment**
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. **Install dependencies**
-```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Run API
+python -m uvicorn app.main:app --reload
+
+# Run benchmark
+python scripts/benchmark.py
 ```
 
-4. **Setup environment**
-```bash
-cp .env.example .env.local
+API: `http://localhost:8000` | Docs: `http://localhost:8000/docs`
+
+## ML Architecture
+
+### Model Type
+
+**Random Forest Classifier** - Binary classification for churn prediction
+
+### Model Pipeline
+
+```
+Raw Data → Preprocessing → Feature Engineering → Model Training → Prediction
 ```
 
-5. **Setup database**
-```bash
-python scripts/setup_db.py
+### Model Components
+
+**ChurnModelTrainer (app/services/churn_model.py)**
+- Preprocessing: Label encoding for categorical, StandardScaler for numerical
+- Training: Random Forest with balanced class weights (100 trees, max_depth=15)
+- Prediction: Returns predictions (0/1) and probabilities (0-1)
+- Persistence: Save/load model with preprocessing artifacts
+
+**ModelTrainer (app/services/model_trainer.py)**
+- Supports multiple models: Random Forest, Gradient Boosting, Logistic Regression
+- Evaluation metrics: Accuracy, Precision, Recall, F1-Score, ROC-AUC
+- Feature importance extraction
+
+### Prediction Flow
+
+```
+Customer Input → Validation (Pydantic) → Feature Transformation → Model Prediction → Risk Assessment → Response
 ```
 
-6. **Run API**
-```bash
-python main.py
+### Model Performance
+
+- Accuracy: 92.3%
+- Precision: 89.5%
+- Recall: 85.2%
+- F1 Score: 87.3%
+- AUC-ROC: 0.91
+
+### Key Features
+
+- Balanced Class Weights: Handles imbalanced data
+- Feature Importance: Identifies key churn factors
+- Batch Processing: Efficient multiple predictions
+- Model Versioning: Track model versions
+
+## ML Services
+
+### PredictionService (app/services/prediction_service.py)
+
+Main service for churn prediction.
+
+**Key Methods:**
+- `predict()` - Single customer prediction with risk assessment
+- `predict_batch()` - Batch predictions with statistics
+- `_get_risk_level()` - Determine risk (LOW/MEDIUM/HIGH from probability)
+- `_get_recommendation()` - Generate retention recommendations
+
+**Risk Levels:**
+- LOW: probability < 0.33
+- MEDIUM: 0.33 ≤ probability < 0.67
+- HIGH: probability ≥ 0.67
+
+### ChurnModelTrainer (app/services/churn_model.py)
+
+Production-ready Random Forest trainer.
+
+**Model Config:**
+- 100 trees, max_depth=15
+- Handles unseen categories
+- Returns predictions (0/1) and probabilities (0-1)
+
+## API Endpoints
+
+### Single Prediction
+```http
+POST /predict
 ```
 
-API will be available at `http://localhost:8000`
-
-7. **Run Dashboard** (in another terminal)
-```bash
-streamlit run dashboard/app.py
+**Request:**
+```json
+{
+  "tenure": 24,
+  "monthly_charges": 89.5,
+  "total_charges": 2148.0,
+  "contract_type": "Month-to-month",
+  "internet_service": "Fiber optic",
+  "online_security": 1,
+  "online_backup": 0,
+  "device_protection": 1,
+  "tech_support": 0,
+  "streaming_tv": 1,
+  "streaming_movies": 1,
+  "payment_method": "Electronic check",
+  "paperless_billing": 1,
+  "senior_citizen": 0,
+  "partner": 1,
+  "dependents": 0,
+  "phone_service": 1,
+  "multiple_lines": 0
+}
 ```
 
-Dashboard will be available at `http://localhost:8501`
+**Response:**
+```json
+{
+  "churn_probability": 0.75,
+  "risk_level": "HIGH",
+  "risk_score": 75,
+  "recommendation": "Offer contract upgrade incentive"
+}
+```
 
-### Docker Deployment
+### Batch Prediction
+```http
+POST /predict/batch
+```
 
-```bash
-docker-compose up -d
+### Model Metrics
+```http
+GET /metrics
+```
+
+### Feature Importance
+```http
+GET /feature-importance
+```
+
+### Health Check
+```http
+GET /health
+```
+
+## Usage
+
+```python
+import requests
+
+response = requests.post(
+    "http://localhost:8000/predict",
+    json={"tenure": 24, "monthly_charges": 89.5, ...}
+)
+print(response.json())
 ```
 
 ## Project Structure
 
 ```
-customer-churn-prediction/
-├── app/                    # Main application
-│   ├── config/            # Configuration
-│   ├── models/            # Data models and schemas
-│   ├── services/          # Business logic
-│   ├── controllers/       # Request handlers
-│   ├── routers/           # API routes
-│   ├── middleware/        # Custom middleware
-│   ├── utils/             # Utilities
-│   ├── database/          # Database layer
-│   ├── cache/             # Caching
-│   └── monitoring/        # Monitoring
-├── dashboard/             # Streamlit dashboard
-├── scripts/               # Utility scripts
-├── tests/                 # Test suite
-├── docs/                  # Documentation
-└── data/                  # Data directory
+app/
+├── config/          # Configuration (settings.py)
+├── database/        # Database layer
+├── dependencies.py  # Dependency injection
+├── main.py          # FastAPI application
+├── models/          # Pydantic schemas
+├── routers/         # API routes (prediction, health, metrics)
+└── services/        # Business logic (prediction_service, health_service)
 ```
-
-## API Endpoints
-
-### Health Check
-```
-GET /api/v1/health
-```
-
-### Single Prediction
-```
-POST /api/v1/predict
-```
-
-### Batch Predictions
-```
-POST /api/v1/predict/batch
-```
-
-### Model Metrics
-```
-GET /api/v1/metrics/model
-```
-
-### Model Information
-```
-GET /api/v1/model/info
-```
-
-See [API Documentation](docs/API.md) for detailed endpoint documentation.
-
-## Configuration
-
-Environment variables in `.env`:
-
-```
-DEBUG=False
-HOST=0.0.0.0
-PORT=8000
-DATABASE_URL=sqlite:///./churn_prediction.db
-REDIS_URL=redis://localhost:6379/0
-API_KEY=your-api-key
-LOG_LEVEL=INFO
-LLM_ENABLED=False
-LLM_API_KEY=your-openai-key
-```
-
-## Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=app tests/
-
-# Run specific test file
-pytest tests/unit/test_prediction.py -v
-```
-
-## Model Training
-
-```bash
-# Train models
-python scripts/train_models.py
-
-# Evaluate models
-python scripts/evaluate_models.py
-
-# Generate predictions
-python scripts/generate_predictions.py
-```
-
-## Documentation
-
-- [Setup Guide](docs/SETUP.md)
-- [API Documentation](docs/API.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
-
-## Performance Metrics
-
-- **Accuracy**: 92.3%
-- **Precision**: 89.5%
-- **Recall**: 85.2%
-- **F1 Score**: 87.3%
-- **AUC-ROC**: 0.91
 
 ## Technologies
 
-- **Backend**: FastAPI, SQLAlchemy, Pydantic
-- **ML**: Scikit-learn, XGBoost, LightGBM
-- **Frontend**: Streamlit, Plotly
-- **Database**: PostgreSQL, SQLite
-- **Cache**: Redis
-- **Monitoring**: Prometheus, OpenTelemetry
-- **Containerization**: Docker, Docker Compose
-- **Testing**: Pytest, Pytest-cov
+- **Backend**: FastAPI, Pydantic
+- **ML**: Scikit-learn, Random Forest
+- **Database**: SQLAlchemy, SQLite
+- **Testing**: Pytest
 
-## Contributing
-
-1. Create a feature branch
-2. Make your changes
-3. Run tests
-4. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details
-
-## Support
-
-For issues and questions, please open an issue on GitHub.
-
-## Roadmap
-
-- [ ] Advanced feature engineering
-- [ ] Ensemble model improvements
-- [ ] Real-time prediction streaming
-- [ ] Mobile app integration
-- [ ] Advanced visualization
-- [ ] Multi-language support
