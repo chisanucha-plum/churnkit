@@ -1,7 +1,8 @@
 """Unit tests for prediction engine."""
 
-import pytest
 from unittest.mock import Mock
+
+import pytest
 
 from app.services.prediction import PredictionEngine
 

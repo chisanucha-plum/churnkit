@@ -1,7 +1,7 @@
 """Integration tests for data pipeline."""
 
-import pytest
 import pandas as pd
+import pytest
 
 from app.services.data_loader import DataLoader
 from app.services.preprocessor import DataPreprocessor

@@ -3,8 +3,8 @@
 import logging
 from typing import List
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,9 @@ class FeatureEngineer:
     """Handle feature engineering and creation."""
 
     @staticmethod
-    def create_interaction_features(df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
+    def create_interaction_features(
+        df: pd.DataFrame, features: List[str]
+    ) -> pd.DataFrame:
         """Create interaction features."""
         logger.info(f"Creating interaction features from {len(features)} features")
 

@@ -1,10 +1,10 @@
 """Prediction engine service."""
 
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from app.models.ml_models import PredictionResult
 
@@ -22,7 +22,9 @@ class PredictionEngine:
 
     def predict_single(self, customer_data: Dict[str, Any]) -> PredictionResult:
         """Make prediction for single customer."""
-        logger.info(f"Making prediction for customer {customer_data.get('customer_id')}")
+        logger.info(
+            f"Making prediction for customer {customer_data.get('customer_id')}"
+        )
 
         # Convert to DataFrame
         df = pd.DataFrame([customer_data])
