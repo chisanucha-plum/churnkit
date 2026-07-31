@@ -28,7 +28,7 @@ router = APIRouter(prefix="/predict", tags=["Prediction"])
 @router.post("", response_model=PredictionResponse)
 async def predict(
     customer: CustomerInput,
-    service: PredictionService = Depends(get_prediction_service)
+    service: PredictionService = Depends(get_prediction_service),
 ):
     """
     Predict churn probability for a single customer.
@@ -48,7 +48,7 @@ async def predict(
 @router.post("/batch", response_model=BatchPredictionResponse)
 async def predict_batch(
     request: BatchPredictionRequest,
-    service: PredictionService = Depends(get_prediction_service)
+    service: PredictionService = Depends(get_prediction_service),
 ):
     """
     Predict churn probability for multiple customers.
