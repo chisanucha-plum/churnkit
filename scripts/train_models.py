@@ -5,9 +5,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.services.data_loader import DataLoader
-from app.services.preprocessor import DataPreprocessor
 from app.services.feature_engineer import FeatureEngineer
 from app.services.model_trainer import ModelTrainer
+from app.services.preprocessor import DataPreprocessor
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
