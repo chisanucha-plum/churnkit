@@ -1,8 +1,7 @@
 """High risk customers page."""
 
 import streamlit as st
-
-from i18n import t, render_language_selector
+from i18n import render_language_selector, t
 
 st.set_page_config(page_title=t("page_title_high_risk"), page_icon="⚠️")
 

@@ -1,7 +1,7 @@
 """Chart components."""
 
-import streamlit as st
 import plotly.graph_objects as go
+import streamlit as st
 
 
 def display_churn_distribution(data: dict):

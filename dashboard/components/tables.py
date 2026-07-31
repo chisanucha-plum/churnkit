@@ -1,7 +1,7 @@
 """Table components."""
 
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
 
 def display_customers_table(customers: list):

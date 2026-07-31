@@ -1,10 +1,10 @@
 """Prediction form page."""
 
 import json
+
 import requests
 import streamlit as st
-
-from i18n import t, render_language_selector
+from i18n import render_language_selector, t
 
 st.set_page_config(page_title=t("page_title_prediction_form"), page_icon="🧾")
 
