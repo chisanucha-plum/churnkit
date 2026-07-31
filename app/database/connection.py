@@ -64,9 +64,9 @@ class DatabaseConnectionManager:
             # Test connection
             self._test_connection()
             
-            logger.info("✓ Database connection initialized successfully")
+            logger.info("Database connection initialized successfully")
         except Exception as e:
-            logger.error(f"✗ Failed to initialize database: {str(e)}")
+            logger.error(f"Failed to initialize database: {str(e)}")
             raise
     
     def _initialize_postgresql(self, database_url: str) -> None:
@@ -97,7 +97,7 @@ class DatabaseConnectionManager:
             logger.debug("PostgreSQL connection closed")
         
         self.session_factory = sessionmaker(bind=self.engine)
-        logger.info("✓ PostgreSQL connection pool configured")
+        logger.info("PostgreSQL connection pool configured successfully")
     
     def _initialize_sqlite(self, database_url: str) -> None:
         """Initialize SQLite connection."""
@@ -111,7 +111,7 @@ class DatabaseConnectionManager:
         )
         
         self.session_factory = sessionmaker(bind=self.engine)
-        logger.info("✓ SQLite connection configured")
+        logger.info("SQLite connection configured successfully")
     
     def _test_connection(self) -> None:
         """Test database connection with retry logic."""
@@ -124,7 +124,7 @@ class DatabaseConnectionManager:
                     conn.execute(text("SELECT 1"))
                     conn.commit()
                 
-                logger.info("✓ Database connection test successful")
+                logger.info("Database connection test successful")
                 return
             except Exception as e:
                 last_error = e
@@ -177,10 +177,10 @@ class DatabaseConnectionManager:
         try:
             with self.engine.connect() as conn:
                 conn.execute(text("SELECT 1"))
-            logger.debug("✓ Database health check passed")
+            logger.debug("Database health check passed")
             return True
         except Exception as e:
-            logger.error(f"✗ Database health check failed: {str(e)}")
+            logger.error(f"Database health check failed: {str(e)}")
             return False
     
     def get_pool_status(self) -> dict:
@@ -217,9 +217,9 @@ class DatabaseConnectionManager:
         try:
             if self.engine:
                 self.engine.dispose()
-                logger.info("✓ Database connections closed")
+                logger.info("Database connections closed successfully")
         except Exception as e:
-            logger.error(f"Error closing database: {str(e)}")
+            logger.error(f"Error closing database connections: {str(e)}")
 
 
 # Global database manager instance

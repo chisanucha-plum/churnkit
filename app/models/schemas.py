@@ -1,4 +1,9 @@
-"""Pydantic schemas for API requests and responses."""
+"""Pydantic schemas for API requests and responses.
+
+Layered Architecture: Model Layer (DTOs)
+- Input/Output DTOs separate from business logic
+- Validation handled at the boundary
+"""
 
 from typing import List, Optional
 import uuid
@@ -6,13 +11,11 @@ import uuid
 from pydantic import BaseModel, Field
 
 
-class CustomerData(BaseModel):
-    """Customer data for prediction."""
+# ===== Input DTOs =====
 
-    customer_id: str = Field(
-        default_factory=lambda: f"REQ-{uuid.uuid4().hex[:8]}",
-        description="Unique customer identifier",
-    )
+class CustomerInput(BaseModel):
+    """Customer input for prediction (DTO)."""
+
     tenure: int = Field(..., ge=0, description="Months as customer")
     monthly_charges: float = Field(..., ge=0, description="Monthly charges")
     total_charges: float = Field(..., ge=0, description="Total charges")
@@ -32,10 +35,42 @@ class CustomerData(BaseModel):
     phone_service: int = Field(..., ge=0, le=1, description="Has phone service")
     multiple_lines: int = Field(..., ge=0, le=1, description="Has multiple lines")
 
-    class Config:
-        """Pydantic config."""
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "tenure": 24,
+                "monthly_charges": 89.5,
+                "total_charges": 2148.0,
+                "contract_type": "Month-to-month",
+                "internet_service": "Fiber optic",
+                "online_security": 1,
+                "online_backup": 0,
+                "device_protection": 1,
+                "tech_support": 0,
+                "streaming_tv": 1,
+                "streaming_movies": 1,
+                "payment_method": "Electronic check",
+                "paperless_billing": 1,
+                "senior_citizen": 0,
+                "partner": 1,
+                "dependents": 0,
+                "phone_service": 1,
+                "multiple_lines": 0,
+            }
+        }
+    }
 
-        json_schema_extra = {
+
+class CustomerData(CustomerInput):
+    """Customer data with optional ID (for batch operations)."""
+
+    customer_id: str = Field(
+        default_factory=lambda: f"REQ-{uuid.uuid4().hex[:8]}",
+        description="Unique customer identifier",
+    )
+
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "customer_id": "CUST001",
                 "tenure": 24,
@@ -58,10 +93,33 @@ class CustomerData(BaseModel):
                 "multiple_lines": 0,
             }
         }
+    }
 
+
+# ===== Output DTOs =====
 
 class PredictionResponse(BaseModel):
-    """Prediction response."""
+    """Prediction output response (DTO)."""
+
+    churn_probability: float = Field(..., ge=0, le=1)
+    risk_level: str  # "LOW", "MEDIUM", "HIGH"
+    risk_score: int = Field(..., ge=0, le=100)
+    recommendation: str
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "churn_probability": 0.75,
+                "risk_level": "HIGH",
+                "risk_score": 75,
+                "recommendation": "Offer contract upgrade incentive",
+            }
+        }
+    }
+
+
+class DetailedPredictionResponse(BaseModel):
+    """Detailed prediction response with customer ID and explanation."""
 
     customer_id: str
     churn_probability: float = Field(..., ge=0, le=1)
@@ -70,10 +128,8 @@ class PredictionResponse(BaseModel):
     confidence: float = Field(..., ge=0, le=1)
     explanation: Optional[str] = None
 
-    class Config:
-        """Pydantic config."""
-
-        json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "customer_id": "CUST001",
                 "churn_probability": 0.75,
@@ -83,7 +139,10 @@ class PredictionResponse(BaseModel):
                 "explanation": "High monthly charges and short tenure indicate churn risk",
             }
         }
+    }
 
+
+# ===== Batch Operation DTOs =====
 
 class BatchPredictionRequest(BaseModel):
     """Batch prediction request."""
@@ -95,11 +154,13 @@ class BatchPredictionRequest(BaseModel):
 class BatchPredictionResponse(BaseModel):
     """Batch prediction response."""
 
-    predictions: List[PredictionResponse]
+    predictions: List[DetailedPredictionResponse]
     total_count: int
     high_risk_count: int
     processing_time_ms: float
 
+
+# ===== System DTOs =====
 
 class ModelMetrics(BaseModel):
     """Model performance metrics."""
@@ -108,19 +169,23 @@ class ModelMetrics(BaseModel):
     precision: float
     recall: float
     f1_score: float
-    auc_roc: float
-    confusion_matrix: dict
-    feature_importance: dict
+    roc_auc: float
 
 
 class HealthResponse(BaseModel):
     """Health check response."""
 
     status: str
-    version: str
-    database: str
-    cache: str
     model_loaded: bool
+    database_healthy: bool
+    version: str
+
+
+class FeatureImportanceResponse(BaseModel):
+    """Feature importance response."""
+
+    importance: dict
+    top_10: dict
 
 
 class ErrorResponse(BaseModel):
