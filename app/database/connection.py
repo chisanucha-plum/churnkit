@@ -18,7 +18,6 @@ from contextlib import contextmanager
 from typing import Optional
 
 from sqlalchemy import create_engine, event, text
-from sqlalchemy.exc import OperationalError, SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import QueuePool, StaticPool
 
