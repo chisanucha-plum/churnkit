@@ -1,7 +1,8 @@
 """Integration tests for prediction pipeline."""
 
-import pytest
 from unittest.mock import Mock
+
+import pytest
 
 from app.services.prediction import PredictionEngine
 from app.services.preprocessor import DataPreprocessor

@@ -45,9 +45,7 @@ class DataLoader:
         train_df, test_df = train_test_split(
             df, test_size=test_size, random_state=random_state
         )
-        logger.info(
-            f"Split data: {len(train_df)} train, {len(test_df)} test samples"
-        )
+        logger.info(f"Split data: {len(train_df)} train, {len(test_df)} test samples")
         return train_df, test_df
 
     @staticmethod

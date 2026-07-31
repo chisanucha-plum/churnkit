@@ -3,9 +3,9 @@
 import logging
 from typing import Optional
 
-import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 logger = logging.getLogger(__name__)
 

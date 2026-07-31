@@ -1,7 +1,7 @@
 """Unit tests for feature engineer."""
 
-import pytest
 import pandas as pd
+import pytest
 
 from app.services.feature_engineer import FeatureEngineer
 
@@ -22,9 +22,7 @@ def test_create_interaction_features(sample_data):
     """Test interaction feature creation."""
     engineer = FeatureEngineer()
 
-    result = engineer.create_interaction_features(
-        sample_data, ["feature1", "feature2"]
-    )
+    result = engineer.create_interaction_features(sample_data, ["feature1", "feature2"])
 
     assert "feature1_x_feature2" in result.columns
 
