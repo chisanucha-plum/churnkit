@@ -15,20 +15,12 @@ import pandas as pd
 import pytest
 
 from app.utils.config_loader import ConfigLoader, EnvironmentConfig
-from app.utils.exceptions import (
-    ConfigurationException,
-    DataValidationException,
-    InvalidInputException,
-)
-from app.utils.helpers import (
-    chunk_list,
-    convert_to_bool,
-    convert_to_numeric,
-    format_currency,
-    format_percentage,
-    normalize_value,
-    safe_get,
-)
+from app.utils.exceptions import (ConfigurationException,
+                                  DataValidationException,
+                                  InvalidInputException)
+from app.utils.helpers import (chunk_list, convert_to_bool, convert_to_numeric,
+                               format_currency, format_percentage,
+                               normalize_value, safe_get)
 from app.utils.logger import PIIMasker, StructuredLogger, get_logger
 from app.utils.validators import InputValidator
 

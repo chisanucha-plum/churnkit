@@ -12,12 +12,9 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.dependencies import get_prediction_service
-from app.models.schemas import (
-    BatchPredictionRequest,
-    BatchPredictionResponse,
-    CustomerInput,
-    PredictionResponse,
-)
+from app.models.schemas import (BatchPredictionRequest,
+                                BatchPredictionResponse, CustomerInput,
+                                PredictionResponse)
 from app.services.prediction_service import PredictionService
 
 logger = logging.getLogger(__name__)

@@ -16,14 +16,9 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
 from app.config.settings import Settings
-from app.database.connection import (
-    DatabaseConnectionManager,
-    _db_manager,
-    close_db,
-    get_db_engine,
-    get_db_manager,
-    get_db_session,
-)
+from app.database.connection import (DatabaseConnectionManager, _db_manager,
+                                     close_db, get_db_engine, get_db_manager,
+                                     get_db_session)
 
 
 class TestDatabaseConnectionManagerInitialization:

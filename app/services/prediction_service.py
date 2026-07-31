@@ -12,13 +12,9 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import pandas as pd
 
-from app.models.schemas import (
-    BatchPredictionRequest,
-    BatchPredictionResponse,
-    CustomerInput,
-    DetailedPredictionResponse,
-    PredictionResponse,
-)
+from app.models.schemas import (BatchPredictionRequest,
+                                BatchPredictionResponse, CustomerInput,
+                                DetailedPredictionResponse, PredictionResponse)
 
 logger = logging.getLogger(__name__)
 
